@@ -24,6 +24,7 @@ import org.joinfaces.weld.WeldServletContainerInitializerRegistrationBean;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWarDeployment;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportRuntimeHints;
@@ -40,9 +41,13 @@ import org.springframework.context.annotation.ImportRuntimeHints;
 @ImportRuntimeHints(WeldRuntimeHintsRegistrar.class)
 public class WeldSpringBootAutoConfiguration implements CdiImplementationAutoConfiguration {
 
-	@Bean
-	public ServletContainerInitializerRegistrationBean<EnhancedListener> weldServletContainerInitializer() {
-		return new WeldServletContainerInitializerRegistrationBean();
+	@AutoConfiguration
+	@ConditionalOnNotWarDeployment
+	public static class WeldEmbeddedAutoConfiguration {
+		@Bean
+		public ServletContainerInitializerRegistrationBean<EnhancedListener> weldServletContainerInitializer() {
+			return new WeldServletContainerInitializerRegistrationBean();
+		}
 	}
 
 }

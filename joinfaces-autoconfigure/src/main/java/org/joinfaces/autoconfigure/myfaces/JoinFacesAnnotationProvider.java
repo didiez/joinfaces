@@ -59,12 +59,18 @@ public class JoinFacesAnnotationProvider extends AnnotationProviderWrapper {
 			return preparedScanResult.get();
 		}
 
-		MyFacesInitializerRegistrationBean<?> registrationBean = WebApplicationContextUtils
+		try {
+			MyFacesInitializerRegistrationBean<?> registrationBean = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(servletContext)
 				.getBeanProvider(MyFacesInitializerRegistrationBean.class)
 				.getIfAvailable();
-		if (registrationBean != null && registrationBean.getAnnotatedClasses() != null) {
-			return registrationBean.getAnnotatedClasses();
+			if (registrationBean != null && registrationBean.getAnnotatedClasses() != null) {
+				return registrationBean.getAnnotatedClasses();
+			}
+		}
+		catch (NoClassDefFoundError e) {
+			//Probably no embedded webserver
+			log.debug(e.getMessage(), e);
 		}
 
 		return super.getAnnotatedClasses(ctx);

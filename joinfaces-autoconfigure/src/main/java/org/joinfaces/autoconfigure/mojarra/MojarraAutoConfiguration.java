@@ -27,6 +27,7 @@ import org.joinfaces.servlet.TldListenerRegistrationBean;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWarDeployment;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnResource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -46,28 +47,34 @@ import org.springframework.context.annotation.ImportRuntimeHints;
 @ImportRuntimeHints(MojarraRuntimeHintsRegistrar.class)
 public class MojarraAutoConfiguration implements FacesImplementationAutoConfiguration {
 
-	@Bean
-	public ServletContainerInitializerRegistrationBean<FacesInitializer> mojarraServletContainerInitializer() {
-		return new MojarraInitializerRegistrationBean();
-	}
+	@AutoConfiguration
+	@ConditionalOnNotWarDeployment
+	public static class MojarraEmbeddedAutoConfiguration {
 
-	@Bean
-	@ConditionalOnClass(FacesInitializer2.class)
-	public ServletContainerInitializerRegistrationBean<FacesInitializer2> mojarraServletContainerInitializer2() {
-		return new ServletContainerInitializerRegistrationBean<>(FacesInitializer2.class);
-	}
+		@Bean
+		public ServletContainerInitializerRegistrationBean<FacesInitializer> mojarraServletContainerInitializer() {
+			return new MojarraInitializerRegistrationBean();
+		}
 
-	/**
-	 * {@link TldListenerRegistrationBean} for the 'jsf_core.tld' of Mojarra 3.
-	 * Not needed for Mojarra 4+.
-	 *
-	 * @return The {@link TldListenerRegistrationBean}.
-	 */
-	@Bean
-	@ConditionalOnResource(resources = "classpath:/META-INF/jsf_core.tld")
-	public TldListenerRegistrationBean mojarraTldListenerRegistrationBean() {
-		return TldListenerRegistrationBean.builder()
+		@Bean
+		@ConditionalOnClass(FacesInitializer2.class)
+		public ServletContainerInitializerRegistrationBean<FacesInitializer2> mojarraServletContainerInitializer2() {
+			return new ServletContainerInitializerRegistrationBean<>(FacesInitializer2.class);
+		}
+
+		/**
+		 * {@link TldListenerRegistrationBean} for the 'jsf_core.tld' of Mojarra 3.
+		 * Not needed for Mojarra 4+.
+		 *
+		 * @return The {@link TldListenerRegistrationBean}.
+		 */
+		@Bean
+		@ConditionalOnResource(resources = "classpath:/META-INF/jsf_core.tld")
+		public TldListenerRegistrationBean mojarraTldListenerRegistrationBean() {
+			return TldListenerRegistrationBean.builder()
 				.listener(ConfigureListener.class)
 				.build();
+		}
 	}
+
 }

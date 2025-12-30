@@ -17,24 +17,25 @@
 package org.joinfaces.autoconfigure.weld;
 
 import org.jboss.weld.environment.servlet.EnhancedListener;
+import org.joinfaces.autoconfigure.weld.WeldSpringBootAutoConfiguration.WeldEmbeddedAutoConfiguration;
 import org.joinfaces.servlet.ServletContainerInitializerRegistrationBean;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class WeldSpringBootAutoConfigurationTest {
+public class WeldEmbeddedAutoConfigurationTest {
 
-	private WeldSpringBootAutoConfiguration weldSpringBootAutoConfiguration;
+	private WeldEmbeddedAutoConfiguration weldEmbeddedAutoConfiguration;
 
 	@BeforeEach
 	public void setUp() {
-		this.weldSpringBootAutoConfiguration = new WeldSpringBootAutoConfiguration();
+		this.weldEmbeddedAutoConfiguration = new WeldEmbeddedAutoConfiguration();
 	}
 
 	@Test
 	public void testWeldServletContainerInitializer() {
-		ServletContainerInitializerRegistrationBean<EnhancedListener> weldServletContainerInitializer = this.weldSpringBootAutoConfiguration.weldServletContainerInitializer();
+		ServletContainerInitializerRegistrationBean<EnhancedListener> weldServletContainerInitializer = this.weldEmbeddedAutoConfiguration.weldServletContainerInitializer();
 
 		assertThat(weldServletContainerInitializer).isNotNull();
 		assertThat(weldServletContainerInitializer.getServletContainerInitializerClass()).isEqualTo(EnhancedListener.class);

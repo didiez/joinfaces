@@ -26,6 +26,7 @@ import org.joinfaces.servlet.WebFragmentRegistrationBean;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWarDeployment;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -44,25 +45,30 @@ import org.springframework.context.annotation.ImportRuntimeHints;
 @ImportRuntimeHints(MyFacesRuntimeHintsRegistrar.class)
 public class MyFacesAutoConfiguration implements FacesImplementationAutoConfiguration {
 
-	@Bean
-	@ConditionalOnClass(name = "org.apache.myfaces.ee.MyFacesContainerInitializer")
-	public MyFacesInitializerRegistrationBean<?> myFaces3ServletContainerInitializer() throws ClassNotFoundException {
-		Class<? extends ServletContainerInitializer> clazz = Class.forName("org.apache.myfaces.ee.MyFacesContainerInitializer").asSubclass(ServletContainerInitializer.class);
-		return new MyFacesInitializerRegistrationBean<>(clazz);
-	}
+	@AutoConfiguration
+	@ConditionalOnNotWarDeployment
+	public static class MyFacesEmbeddedAutoConfiguration {
 
-	/**
-	 * This {@link WebFragmentRegistrationBean} is equivalent to the
-	 * {@code META-INF/web-fragment.xml} of the {@code myfaces-impl.jar}.
-	 *
-	 * @return myFacesWebFragmentRegistrationBean
-	 */
-	@Bean
-	@ConditionalOnClass(name = "org.apache.myfaces.webapp.StartupServletContextListener")
-	public WebFragmentRegistrationBean myFacesWebFragmentRegistrationBean() {
-		WebFragmentRegistrationBean webFragmentRegistrationBean = new WebFragmentRegistrationBean();
-		webFragmentRegistrationBean.getListeners().add(StartupServletContextListener.class);
-		return webFragmentRegistrationBean;
+		@Bean
+		@ConditionalOnClass(name = "org.apache.myfaces.ee.MyFacesContainerInitializer")
+		public MyFacesInitializerRegistrationBean<?> myFaces3ServletContainerInitializer() throws ClassNotFoundException {
+			Class<? extends ServletContainerInitializer> clazz = Class.forName("org.apache.myfaces.ee.MyFacesContainerInitializer").asSubclass(ServletContainerInitializer.class);
+			return new MyFacesInitializerRegistrationBean<>(clazz);
+		}
+
+		/**
+		 * This {@link WebFragmentRegistrationBean} is equivalent to the
+		 * {@code META-INF/web-fragment.xml} of the {@code myfaces-impl.jar}.
+		 *
+		 * @return myFacesWebFragmentRegistrationBean
+		 */
+		@Bean
+		@ConditionalOnClass(name = "org.apache.myfaces.webapp.StartupServletContextListener")
+		public WebFragmentRegistrationBean myFacesWebFragmentRegistrationBean() {
+			WebFragmentRegistrationBean webFragmentRegistrationBean = new WebFragmentRegistrationBean();
+			webFragmentRegistrationBean.getListeners().add(StartupServletContextListener.class);
+			return webFragmentRegistrationBean;
+		}
 	}
 
 	@AutoConfiguration
@@ -70,10 +76,16 @@ public class MyFacesAutoConfiguration implements FacesImplementationAutoConfigur
 	@ConditionalOnClass(name = "org.apache.myfaces.webapp.MyFacesContainerInitializer")
 	public static class MyFaces4AutoConfiguration {
 
-		@Bean
-		public MyFacesInitializerRegistrationBean<?> myFaces4ServletContainerInitializer() throws ClassNotFoundException {
-			Class<? extends ServletContainerInitializer> clazz = Class.forName("org.apache.myfaces.webapp.MyFacesContainerInitializer").asSubclass(ServletContainerInitializer.class);
-			return new MyFacesInitializerRegistrationBean<>(clazz);
+		@AutoConfiguration
+		@ConditionalOnNotWarDeployment
+		public static class MyFaces4EmbeddedAutoConfiguration {
+
+			@Bean
+			public MyFacesInitializerRegistrationBean<?> myFaces4ServletContainerInitializer() throws ClassNotFoundException {
+				Class<? extends ServletContainerInitializer> clazz = Class.forName("org.apache.myfaces.webapp.MyFacesContainerInitializer").asSubclass(ServletContainerInitializer.class);
+				return new MyFacesInitializerRegistrationBean<>(clazz);
+			}
 		}
 	}
+
 }

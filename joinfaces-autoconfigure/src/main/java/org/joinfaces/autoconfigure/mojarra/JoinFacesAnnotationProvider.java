@@ -25,6 +25,7 @@ import jakarta.servlet.ServletContext;
 
 import com.sun.faces.spi.AnnotationProvider;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.joinfaces.ServletContextUtils;
 import org.joinfaces.autoconfigure.FacesAnnotationProviderUtil;
 
@@ -35,6 +36,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  *
  * @author Lars Grefer
  */
+@Slf4j
 @NoArgsConstructor
 public class JoinFacesAnnotationProvider extends AnnotationProvider {
 
@@ -57,12 +59,18 @@ public class JoinFacesAnnotationProvider extends AnnotationProvider {
 			return preparedScanResult.get();
 		}
 
-		MojarraInitializerRegistrationBean registrationBean = WebApplicationContextUtils
+		try {
+			MojarraInitializerRegistrationBean registrationBean = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(this.servletContext)
 				.getBeanProvider(MojarraInitializerRegistrationBean.class)
 				.getIfAvailable();
-		if (registrationBean != null && registrationBean.getAnnotatedClasses() != null) {
-			return registrationBean.getAnnotatedClasses();
+			if (registrationBean != null && registrationBean.getAnnotatedClasses() != null) {
+				return registrationBean.getAnnotatedClasses();
+			}
+		}
+		catch (NoClassDefFoundError e) {
+			//Probably no embedded webserver
+			log.debug(e.getMessage(), e);
 		}
 
 		return this.wrappedAnnotationProvider.getAnnotatedClasses(urls);
