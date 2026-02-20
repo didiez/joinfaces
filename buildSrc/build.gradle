@@ -6,7 +6,7 @@ repositories {
     mavenCentral()
 }
 
-def springBootVersion = "3.5.10"
+def springBootVersion = "3.5.11"
 
 dependencies {
     api "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
