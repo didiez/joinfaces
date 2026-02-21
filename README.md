@@ -1,6 +1,6 @@
 JoinFaces
 =============================
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.joinfaces/jsf-spring-boot-starter/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.joinfaces/jsf-spring-boot-starter)
+[![Maven Central](https://img.shields.io/maven-central/v/org.joinfaces/faces-spring-boot-starter)](https://central.sonatype.com/artifact/org.joinfaces/faces-spring-boot-starter)
 [![Build Status](https://github.com/joinfaces/joinfaces/actions/workflows/gradle.yml/badge.svg)](https://github.com/joinfaces/joinfaces/actions/workflows/gradle.yml)
 [![codecov](https://codecov.io/gh/joinfaces/joinfaces/branch/master/graph/badge.svg)](https://codecov.io/gh/joinfaces/joinfaces)
 [![](https://img.shields.io/badge/javadoc-stable-green.svg)](https://docs.joinfaces.org/current/api)
@@ -61,6 +61,9 @@ Joinfaces | Java           | Spring Boot | JSF / Faces
 `5.4.x`   | `17` to `21`   | `3.4`       |`3.0` to `4.0`
 `5.5.x`   | `17`+          | `3.5`       |`3.0` to `4.0`
 `6.0.x`   | `17`+          | `4.0`       |`4.0` to `4.1`
+`5.5.x`   | `17`, `21`, `25` (tested) | `3.5` | `3.0` to `4.0`
+`6.0.x`   | `17`, `21`, `25` (tested) | `4.0` | `4.0` to `4.1`
+`6.1.x`   | `17`, `21`, `25` (tested) | `4.1` | `4.0` to `4.1`
 
 This are the combinations we have tested and expect to work, but depending on the features you are using, other combinations might work, too.
 When using Java 9 or higher, make sure to use JoinFaces only on the classpath and not on the modulepath.
